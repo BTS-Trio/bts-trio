@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bts-trio-preview
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: BTS_TRIO_PREVIEW_PASSWORD
+        sync: false
