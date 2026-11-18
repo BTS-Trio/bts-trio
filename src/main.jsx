@@ -190,7 +190,7 @@ function Research({ page, question, history, onSearch, clearHistory }) {
   const empty = {
     proof: '검색 결과에서 근거 ID를 선택하면 검증 기록을 확인할 수 있습니다.',
     issues: isUpdates ? '등록된 업데이트가 없습니다.' : '등록된 이슈가 없습니다.',
-    search: '질문을 입력하면 연결된 그래미 검증 자료에서 근거를 찾습니다.',
+    search: '연결된 그래미 기록, 팝업 공지와 투어 일정에서 근거를 찾습니다.',
     about: '현재는 홈 화면, 주제별 탐색과 검색 기록을 이용할 수 있습니다.',
   };
 
@@ -273,9 +273,3 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(<App />);
-
-
-
-
-
-

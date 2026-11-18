@@ -29,7 +29,7 @@ npm.cmd run build
 2. 결과의 **G-01** 또는 **G-02**를 선택해 Proof Lab에서 검증 기록을 확인합니다.
 3. **공식 원문 열기**를 선택하면 Recording Academy의 BTS 아티스트 페이지가 열립니다.
 
-현재 검색은 프로젝트의 **BTS 공식 활동 검증표**에서 ‘원문 확인’ 상태인 G-01과 G-02를 사용합니다. 질문의 키워드로 기록을 고르고 근거에 포함된 내용으로 응답을 구성합니다. 연결된 자료에서 찾을 수 없는 질문에는 근거가 없음을 표시합니다. Supabase, 벡터 검색, 생성형 모델은 이후 연동 단계입니다.
+현재 검색은 공식 원문을 대조한 그래미 기록 2건, 팝업 공지 2건, 가오슝 투어 일정 3건을 사용합니다. 질문의 키워드로 기록을 골라 답변을 구성합니다. 벡터 검색과 생성형 모델은 이후 연동 단계입니다.
 
 ## 주요 파일
 
@@ -38,7 +38,7 @@ npm.cmd run build
 | `src/main.jsx` | 갤럭시 홈과 페이지 이동 |
 | `src/research.jsx` | API 검색 결과와 Proof Lab 검증 기록 |
 | `server/main.py` | FastAPI, 근거 검색, 빌드된 화면 제공 |
-| `server/evidence.json` | 두 건의 확인된 기록과 공식 출처 |
+| `server/evidence.json` | Supabase 설정 없이 실행할 때 사용하는 확인된 근거 |
 
 서버가 실행 중이면 http://127.0.0.1:8000/docs 에서 API를 테스트할 수 있습니다.
 
@@ -53,3 +53,13 @@ GitHub에 올릴 때 이 폴더를 저장소 루트로 사용합니다. 설치 �
 5. 홈과 **검색 → Proof Lab**을 확인한 뒤 팀원에게 링크와 비밀번호를 전달합니다.
 
 Docker 빌드는 React를 먼저 빌드하고 FastAPI로 화면과 API를 함께 제공합니다. 검토용 비밀번호는 Render에서 설정하고 GitHub에는 저장하지 않습니다.
+
+
+## Supabase 근거 테이블 연결
+
+Supabase의 `public.bts_evidence`에는 행 단위 보안이 켜져 있습니다. FastAPI는 서버 전용 키로 읽습니다. Render의 **bts-trio-preview → Environment**에서 아래 두 값을 함께 설정하고 배포합니다.
+
+- `SUPABASE_URL` · Supabase 프로젝트의 API URL
+- `SUPABASE_SECRET_KEY` · Supabase의 **Secret key**. Render 환경 변수에 직접 저장합니다.
+
+두 환경 변수 없이 실행하면 로컬 JSON에서 검증 자료를 읽습니다. 두 값이 설정된 서버는 Supabase를 사용하며, 데이터베이스 오류가 발생하면 API가 503을 반환합니다.

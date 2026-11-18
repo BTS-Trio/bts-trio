@@ -18,6 +18,10 @@ function useApi(path, question) {
           setState({ status: 'missing' });
           return;
         }
+        if (response.status === 503) {
+          setState({ status: 'unavailable' });
+          return;
+        }
         if (!response.ok) throw new Error('Request failed');
         const data = await response.json();
         if (!controller.signal.aborted) setState({ status: 'ready', data });
@@ -37,6 +41,7 @@ function Status({ status }) {
   const labels = {
     loading: '자료를 확인하고 있습니다.',
     missing: '등록된 근거를 찾을 수 없습니다.',
+    unavailable: '근거 자료에 일시적으로 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.',
     error: '서버에 연결할 수 없습니다. 잠시 후 페이지를 새로고침해 주세요.',
   };
   return <p className="muted" role="status">{labels[status]}</p>;
@@ -51,7 +56,7 @@ export function SearchResult({ question }) {
       {result.data.evidence.length > 0 && <ul className="topic-list evidence-list" aria-label="검색 근거">
         {result.data.evidence.map(item => <li key={item.id}>
           <a href={'#proof?' + new URLSearchParams({ q: item.id })}>
-            <strong>{item.id} · {item.song}</strong>
+            <strong>{item.id} · {item.title}</strong>
             <span>{item.source} · Proof Lab에서 검증 기록 보기 →</span>
           </a>
         </li>)}
@@ -65,11 +70,11 @@ export function ProofRecord({ id }) {
   if (result.status !== 'ready') return <div className="empty"><Status status={result.status} /></div>;
   const item = result.data;
   return <article className="empty proof-record">
-    <p className="submitted">{item.id} · {item.song}</p>
-    <p>제{item.ceremony}회 그래미 · {item.category}</p>
+    <p className="submitted">{item.id} · {item.title}</p>
+    <p>{item.category}</p>
     <p>{item.record}</p>
     <p className="muted">출처 · {item.source}</p>
+    <p className="muted">원문 확인일 · {item.verified_on}</p>
     <a className="action" href={item.url} target="_blank" rel="noopener noreferrer">공식 원문 열기 ↗</a>
   </article>;
 }
-

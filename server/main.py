@@ -1,18 +1,27 @@
-import json
 import os
 import secrets
-import unicodedata
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 from fastapi.security import HTTPBasic
 from fastapi.staticfiles import StaticFiles
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
+
+from .evidence import Evidence, load_evidence, project_url, retrieve
 
 
 ROOT = Path(__file__).resolve().parent.parent
-app = FastAPI(title="BTS TRIO API", version="0.1.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if project_url and not await run_in_threadpool(load_evidence, limit=1):
+        raise RuntimeError("Supabase is connected, but bts_evidence has no rows.")
+    yield
+
+
+app = FastAPI(title="BTS TRIO API", version="0.1.0", lifespan=lifespan)
 preview_password = os.environ.get("BTS_TRIO_PREVIEW_PASSWORD", "").strip()
 if os.environ.get("BTS_TRIO_REQUIRE_PREVIEW_PASSWORD") == "1" and not preview_password:
     raise RuntimeError("Set BTS_TRIO_PREVIEW_PASSWORD before starting the hosted preview.")
@@ -46,16 +55,6 @@ if preview_password:
         return response
 
 
-class Evidence(BaseModel):
-    id: str
-    song: str
-    ceremony: int
-    category: str
-    record: str
-    source: str
-    url: str
-
-
 class SearchRequest(BaseModel):
     question: str = Field(min_length=1, max_length=300)
 
@@ -63,30 +62,6 @@ class SearchRequest(BaseModel):
 class SearchResult(BaseModel):
     answer: str
     evidence: list[Evidence]
-
-
-records = [
-    Evidence.model_validate(record)
-    for record in json.loads((ROOT / "server" / "evidence.json").read_text(encoding="utf-8-sig"))
-]
-by_id = {record.id: record for record in records}
-song_aliases = {"G-01": ("dynamite", "다이너마이트"), "G-02": ("butter", "버터")}
-award_terms = ("그래미", "grammy", "후보", "수상", "nominat", "best pop duo")
-other_topics = ("빌보드", "billboard", "차트", "chart", "투어", "tour", "군 복무", "군복무", "복귀", "공연", "performed", "발매", "release", "가사", "lyric", "작사", "작곡", "멤버")
-
-
-def retrieve(question: str) -> list[Evidence]:
-    query = unicodedata.normalize("NFKC", question).casefold()
-    if any(term in query for term in other_topics):
-        return []
-
-    selected = [record for record in records if any(alias in query for alias in song_aliases[record.id])]
-    asks_about_awards = any(term in query for term in award_terms)
-    if selected and asks_about_awards:
-        return selected
-    if asks_about_awards or "주요 성과" in query:
-        return records
-    return []
 
 
 @app.post("/api/search", response_model=SearchResult)
@@ -97,22 +72,21 @@ def search(payload: SearchRequest) -> SearchResult:
     found = retrieve(question)
     if not found:
         return SearchResult(
-            answer="현재 연결된 자료에서 질문에 답할 근거를 찾지 못했습니다. 그래미 후보 기록을 질문해 보세요.",
+            answer="현재 연결된 자료에서 이 질문에 답할 근거를 찾지 못했습니다.",
             evidence=[],
         )
 
-    lines = ["현재 연결된 Recording Academy 검증 기록입니다."]
+    lines = ["등록된 공식 자료에서 찾은 기록입니다."]
     for item in found:
-        lines.append(
-            f"‘{item.song}’은 제{item.ceremony}회 그래미 {item.category} 부문에서 "
-            f"{item.record} [{item.id}]"
-        )
+        lines.append(f"{item.record} [{item.id}]")
     return SearchResult(answer="\n".join(lines), evidence=found)
 
 
 @app.get("/api/evidence/{evidence_id}", response_model=Evidence)
 def get_evidence(evidence_id: str) -> Evidence:
-    record = by_id.get(evidence_id.upper())
+    if not evidence_id.isascii() or not evidence_id.replace("-", "").isalnum() or len(evidence_id) > 36:
+        raise HTTPException(status_code=404, detail="등록된 근거를 찾을 수 없습니다.")
+    record = next(iter(load_evidence(id="eq." + evidence_id.upper())), None)
     if record is None:
         raise HTTPException(status_code=404, detail="등록된 근거를 찾을 수 없습니다.")
     return record
@@ -120,10 +94,8 @@ def get_evidence(evidence_id: str) -> Evidence:
 
 @app.get("/api/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    return {"status": "ok", "evidence_source": "supabase" if project_url else "local"}
 
 
 if (ROOT / "dist").is_dir():
     app.mount("/", StaticFiles(directory=ROOT / "dist", html=True), name="frontend")
-
-

@@ -1,20 +1,114 @@
 [
   {
     "id": "G-01",
-    "song": "Dynamite",
-    "ceremony": 63,
-    "category": "Best Pop Duo/Group Performance",
-    "record": "후보에 올랐으며 수상하지 않았습니다.",
+    "title": "Dynamite",
+    "kind": "grammy",
+    "category": "제63회 그래미 · Best Pop Duo/Group Performance",
+    "record": "‘Dynamite’는 해당 부문 후보에 올랐으며 수상하지 않았습니다.",
     "source": "Recording Academy",
-    "url": "https://www.grammy.com/artists/bts/287749/"
+    "url": "https://www.grammy.com/artists/bts/287749/",
+    "event_date": null,
+    "aliases": [
+      "dynamite",
+      "다이너마이트"
+    ],
+    "verified_on": "2026-11-18"
   },
   {
     "id": "G-02",
-    "song": "Butter",
-    "ceremony": 64,
-    "category": "Best Pop Duo/Group Performance",
-    "record": "후보에 올랐으며 수상하지 않았습니다.",
+    "title": "Butter",
+    "kind": "grammy",
+    "category": "제64회 그래미 · Best Pop Duo/Group Performance",
+    "record": "‘Butter’는 해당 부문 후보에 올랐으며 수상하지 않았습니다.",
     "source": "Recording Academy",
-    "url": "https://www.grammy.com/artists/bts/287749/"
+    "url": "https://www.grammy.com/artists/bts/287749/",
+    "event_date": null,
+    "aliases": [
+      "butter",
+      "버터"
+    ],
+    "verified_on": "2026-11-18"
+  },
+  {
+    "id": "NOW-01",
+    "title": "BTS POP-UP · 밀라노",
+    "kind": "popup",
+    "category": "공식 팝업 운영 공지",
+    "record": "Weverse 공지에 따르면 밀라노 Torneria Tortona의 팝업 운영 기간은 현지 2026년 10월 16일~11월 1일이었습니다.",
+    "source": "Weverse",
+    "url": "https://weverse.io/bts/notice/39815",
+    "event_date": "2026-10-16",
+    "aliases": [
+      "밀라노",
+      "milan",
+      "milano"
+    ],
+    "verified_on": "2026-11-18"
+  },
+  {
+    "id": "NOW-07",
+    "title": "BTS POP-UP · 베를린",
+    "kind": "popup",
+    "category": "공식 팝업 운영 공지",
+    "record": "Weverse는 베를린 Mall of Berlin 동관 2층 팝업의 운영 기간을 현지 2026년 11월 20일~12월 6일로 안내했습니다.",
+    "source": "Weverse",
+    "url": "https://weverse.io/bts/notice/40905?hl=ko",
+    "event_date": "2026-11-20",
+    "aliases": [
+      "베를린",
+      "berlin"
+    ],
+    "verified_on": "2026-11-18"
+  },
+  {
+    "id": "TOUR-01",
+    "title": "BTS WORLD TOUR ‘ARIRANG’ · 가오슝 19일",
+    "kind": "tour",
+    "category": "공식 투어 일정",
+    "record": "공식 투어 페이지에 현지 2026년 11월 19일 대만 가오슝 Kaohsiung National Stadium 회차가 기재돼 있습니다.",
+    "source": "BTS 공식 투어 페이지",
+    "url": "https://www.btsworldtourofficial.com/",
+    "event_date": "2026-11-19",
+    "aliases": [
+      "가오슝",
+      "대만",
+      "kaohsiung",
+      "taiwan"
+    ],
+    "verified_on": "2026-11-18"
+  },
+  {
+    "id": "TOUR-02",
+    "title": "BTS WORLD TOUR ‘ARIRANG’ · 가오슝 21일",
+    "kind": "tour",
+    "category": "공식 투어 일정",
+    "record": "공식 투어 페이지에 현지 2026년 11월 21일 대만 가오슝 Kaohsiung National Stadium 회차가 기재돼 있습니다.",
+    "source": "BTS 공식 투어 페이지",
+    "url": "https://www.btsworldtourofficial.com/",
+    "event_date": "2026-11-21",
+    "aliases": [
+      "가오슝",
+      "대만",
+      "kaohsiung",
+      "taiwan"
+    ],
+    "verified_on": "2026-11-18"
+  },
+  {
+    "id": "TOUR-03",
+    "title": "BTS WORLD TOUR ‘ARIRANG’ · 가오슝 22일",
+    "kind": "tour",
+    "category": "공식 투어 일정",
+    "record": "공식 투어 페이지에 현지 2026년 11월 22일 대만 가오슝 Kaohsiung National Stadium 회차가 기재돼 있습니다.",
+    "source": "BTS 공식 투어 페이지",
+    "url": "https://www.btsworldtourofficial.com/",
+    "event_date": "2026-11-22",
+    "aliases": [
+      "가오슝",
+      "대만",
+      "kaohsiung",
+      "taiwan"
+    ],
+    "verified_on": "2026-11-18"
   }
 ]

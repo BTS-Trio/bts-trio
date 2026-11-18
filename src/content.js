@@ -22,7 +22,7 @@ export const pages = {
   ...Object.fromEntries(topics.map(topic => [topic.id, topic])),
 };
 
-export const suggestions = ['BTS의 주요 성과는?', '완전체 활동은 언제부터?', '멤버별 주요 활동 정리', '군 복무와 복귀 일정'];
+export const suggestions = ['BTS의 주요 성과는?', 'Butter 그래미 수상 기록은?', '베를린 팝업 일정', '가오슝 투어 일정'];
 export const metrics = [
   { label: '활동 연수', icon: '♙', page: 'timeline' },
   { label: '글로벌 차트', icon: '◎', page: 'impact' },
